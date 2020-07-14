@@ -24,7 +24,7 @@ with fluid.dygraph.guard():
     model = MNIST()
     model.train()
     train_loader = paddle.batch(paddle.dataset.mnist.train(), batch_size=16)
-    optimizer = fluid.optimizer.SGDOptimizer(learning_rate=0.01, parameter_list=model.parameters())
+    optimizer = fluid.optimizer.SGDOptimizer(learning_rate=0.001, parameter_list=model.parameters())
     EPOCH_NUM = 10
     for epoch_id in range(EPOCH_NUM):
         for batch_id, data in enumerate(train_loader()):
@@ -47,7 +47,7 @@ with fluid.dygraph.guard():
             if  batch_id != 0 and batch_id % 1000 == 0:
                 print("epoch: {}, batch: {}, loss is: {}".format(epoch_id, batch_id, avg_loss.numpy()))
 
-            # 后向传播，更新参数过程
+            # 后向传播，更新参数的过程
             avg_loss.backward()
             optimizer.minimize(avg_loss)
             model.clear_gradients()
