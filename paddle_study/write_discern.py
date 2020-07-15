@@ -1,6 +1,5 @@
 import paddle
 import paddle.fluid as fluid
-from paddle.fluid.dygraph.nn import Linear
 import numpy as np
 import os
 from PIL import Image
