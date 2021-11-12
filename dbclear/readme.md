@@ -1,0 +1,4 @@
+ - **db.config** - 配合文件，生产数据库、redis
+ - **clean_goods_basic_reference.py** - 表tb_goods_basic_reference中basic_id关联表tb_goods_basic中的id, 若在后者不存在，则删除
+ - **clean_goods_reference.py** - 表tb_goods_reference中goods_id关联表tb_goods中的id, 若在后者找不到，则删除
+ - **update_queue_goods_check.py** - 清理队列，其中值在tb_goods_basic中不存在，则移除。清理数据是大量更新basicId，无效id阻塞队列

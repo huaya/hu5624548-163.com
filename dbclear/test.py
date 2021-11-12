@@ -3,7 +3,6 @@
 import configparser as cp
 import MySQLdb as mdb
 import sys
-import time
 
 if len(sys.argv) != 4:
     raise Exception("参数错误, 需要三个参数（statrId， endId， step）")
