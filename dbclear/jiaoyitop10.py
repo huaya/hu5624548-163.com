@@ -92,7 +92,7 @@ if count:
     df = DataFrame(aaa, index=idx, columns=['站名', '昨总量', '今天累计', '昨同时间'])
 
     fig = plt.figure(figsize=(8,3))
-    ax = fig.add_subplot(111, frameon=True, xticks=[], yticks=[])
+    ax = fig.add_subplot(frameon=False, xticks=[], yticks=[])
 
     the_table=plt.table(cellText=aaa, colLabels=df.columns, colWidths=[0.2] * aaa.shape[1], loc='center',cellLoc='center')
     the_table.set_fontsize(20)
