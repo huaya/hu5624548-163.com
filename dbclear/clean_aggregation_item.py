@@ -23,8 +23,8 @@ db = mdb.connect(
     database=cf.get("db", "database")
 )
 # 使用 cursor() 方法创建一个游标对象 cursor
+db.autocommit(True);
 cursor = db.cursor();
-
 
 sql = "select DISTINCT ai.basic_id from tb_aggregation_item ai left join tb_goods_basic gb on ai.basic_id = gb.id where gb.id is null and ai.id >= %s and ai.id <= %s;"
 delsql = "delete from tb_aggregation_item where basic_id = %s"
@@ -41,7 +41,6 @@ if len(ids) > 0:
         res = cursor.rowcount
         cnt = cnt + res;
         print("删除数据aggregation_item, basic_id: %s, num: %s" % (id, res))
-        db.autocommit(True);
 
 print("删除aggregation_item数据条数：%s, basicId个数：%s" % (cnt, len(ids)))
 # 关闭数据库连接
