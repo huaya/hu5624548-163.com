@@ -4,13 +4,12 @@ import configparser as cp
 import MySQLdb as mdb
 import sys
 
-if len(sys.argv) != 4:
-    raise Exception("参数错误, 需要三个参数（statrId， endId， step）")
+if len(sys.argv) != 3:
+    raise Exception("参数错误, 需要2个参数（statrId， endId）")
 
 statrId=int(sys.argv[1])
 endId=int(sys.argv[2])
-step=int(sys.argv[3])
-print("startId: %s, endId: %s, step: %s" % (statrId, endId, step))
+print("startId: %s, endId: %s" % (statrId, endId))
 
 cf = cp.ConfigParser()
 cf.read("./db.config")
@@ -26,28 +25,25 @@ db = mdb.connect(
 # 使用 cursor() 方法创建一个游标对象 cursor
 cursor = db.cursor();
 
-cnt = 0
-sql = "select gbr.id from tb_aggregation_item gbr left join tb_goods_basic gb on gbr.basic_id = gb.id where gb.id is null and gbr.id >= %s and gbr.id <= %s"
-delsql = "delete from tb_goods_basic_lang where id in (%s)"
-while True and statrId < endId:
-    endIdC = statrId + step;
-    sql_e = sql % (statrId, endIdC)
-    cursor.execute(sql_e);
-    ids = cursor.fetchall();
 
-    res = 0
-    if len(ids) > 0:
-        delsql_e = delsql % ("%s" % "," .join(['%d' % id for id in ids]))
+sql = "select DISTINCT ai.basic_id from tb_aggregation_item ai left join tb_goods_basic gb on ai.basic_id = gb.id where gb.id is null and ai.id >= %s and ai.id <= %s;"
+delsql = "delete from tb_aggregation_item where basic_id = %s"
+
+sql_e = sql % (statrId, endId)
+cursor.execute(sql_e);
+ids = cursor.fetchall();
+
+cnt = 0
+if len(ids) > 0:
+    for id in ids:
+        delsql_e = delsql % id
         cursor.execute(delsql_e);
         res = cursor.rowcount
         cnt = cnt + res;
-    print("删除数据aggregation_item, startId: %s, endId: %s, num: %s" % (statrId, endIdC, res))
+        print("删除数据aggregation_item, basic_id: %s, num: %s" % (id, res))
+        db.autocommit(True);
 
-    statrId = statrId + step;
-    db.autocommit(False);
-    db.commit()
-
-print("删除aggregation_item数据条数：%s" % cnt)
+print("删除aggregation_item数据条数：%s, basicId个数：%s" % (cnt, len(ids)))
 # 关闭数据库连接
 db.close()
 
