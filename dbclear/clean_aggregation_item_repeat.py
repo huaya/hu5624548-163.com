@@ -57,6 +57,7 @@ for data in datas:
     tab_id = data[2]
     cnt = data[3]
     sql_e = sql % (aggregation_id, basic_id, tab_id)
+    print("删除重复数，aggregation_id: %s, basic_id: %s, tab_id: %s, cnt:%s " % (aggregation_id, basic_id, tab_id, cnt))
 
     cursor.execute(sql_e)
     ids = cursor.fetchall()
