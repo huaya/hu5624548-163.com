@@ -2,15 +2,17 @@
 #!/usr/bin/python3
 import configparser as cp
 import redis
+import requests
+import json
+import sys
 
-cf = cp.ConfigParser()
-cf.read("./db.config")
+siteId=int(sys.argv[1])
+esCode=str(sys.argv[2])
+price_reload = "http://res.beta.orderplus.com/price/reload/according/esclient"
+reload_data = {"siteId": "%s" % str(siteId),"esClient": "%s" % esCode}
 
-rd = redis.StrictRedis(host=cf.get("redis", "host"), port=cf.getint("redis", "port"), password=cf.get("redis", "password"),db=cf.getint("redis", "database"), decode_responses=True)
-
-ids=[43437,43438]
-
-rd.zrem("cloud-update-queue:goods:wait1", *tuple(ids))
-
-rd.close()
-
+price_rs = requests.post(url=price_reload, json=reload_data)
+if price_rs.status_code != 200:
+    raise Exception("登录失败，status_code: %s" % price_rs.status_code)
+js_res = json.loads(price_rs.content.decode("UTF-8"))
+print(js_res)
